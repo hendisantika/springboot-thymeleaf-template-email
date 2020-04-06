@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -79,5 +80,17 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .build();
     }
 
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/docApi/v2/api-docs", "/v2/api-docs");
+
+        registry.addRedirectViewController("/docApi/swagger-resources/configuration/ui",
+                "/swagger-resources/configuration/ui");
+
+        registry.addRedirectViewController("/docApi/swagger-resources/configuration/security",
+                "/swagger-resources/configuration/security");
+
+        registry.addRedirectViewController("/docApi/swagger-resources", "/swagger-resources");
+    }
 
 }
