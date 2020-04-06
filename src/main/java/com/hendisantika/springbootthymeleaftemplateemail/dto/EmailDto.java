@@ -94,4 +94,9 @@ public class EmailDto {
         this.cc = splitByComma(ccList);
     }
 
+    private String[] splitByComma(String toMultiple) {
+        String[] toSplit = toMultiple.split(",");
+        return toSplit;
+    }
+
 }
