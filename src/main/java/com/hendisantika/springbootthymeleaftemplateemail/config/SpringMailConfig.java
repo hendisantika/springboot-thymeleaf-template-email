@@ -71,4 +71,11 @@ public class SpringMailConfig {
         templateResolver.setCacheable(false);
         return templateResolver;
     }
+
+    @Bean(name = "htmlTemplateEngine")
+    public TemplateEngine htmlTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.addTemplateResolver(htmlTemplateResolver());
+        return templateEngine;
+    }
 }
