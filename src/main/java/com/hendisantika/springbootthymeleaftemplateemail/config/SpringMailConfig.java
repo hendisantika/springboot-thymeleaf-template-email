@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.Properties;
@@ -78,4 +79,16 @@ public class SpringMailConfig {
         templateEngine.addTemplateResolver(htmlTemplateResolver());
         return templateEngine;
     }
+
+    private ITemplateResolver fileTemplateResolver() {
+        FileTemplateResolver templateResolver = new FileTemplateResolver();
+        templateResolver.setPrefix("/Emailer/templates/"); //Change based on your environment
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF8");
+        templateResolver.setCheckExistence(true);
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
+
 }
