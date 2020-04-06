@@ -91,4 +91,10 @@ public class SpringMailConfig {
         return templateResolver;
     }
 
+    @Bean(name = "fileTemplateEngine")
+    public TemplateEngine fileTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.addTemplateResolver(fileTemplateResolver());
+        return templateEngine;
+    }
 }
