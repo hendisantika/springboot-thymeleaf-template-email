@@ -62,4 +62,36 @@ public class EmailDto {
     private Map<String, Object> staticResourceMap;
 
     private String emailedMessage;
+
+    public EmailDto(String from, String toList, String subject, String message) {
+        this();
+        this.from = from;
+        this.subject = subject;
+        this.message = message;
+        this.to = splitByComma(toList);
+    }
+
+
+    public EmailDto(String from, String toList, String ccList) {
+        this();
+        this.from = from;
+        this.to = splitByComma(toList);
+        this.cc = splitByComma(ccList);
+    }
+
+    public EmailDto(String from, String toList) {
+        this();
+        this.from = from;
+        this.to = splitByComma(toList);
+    }
+
+    public EmailDto(String from, String toList, String ccList, String subject, String message) {
+        this();
+        this.from = from;
+        this.subject = subject;
+        this.message = message;
+        this.to = splitByComma(toList);
+        this.cc = splitByComma(ccList);
+    }
+
 }
