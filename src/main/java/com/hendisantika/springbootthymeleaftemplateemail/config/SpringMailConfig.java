@@ -60,4 +60,15 @@ public class SpringMailConfig {
         templateResolver.setCacheable(false);
         return templateResolver;
     }
+
+    private ITemplateResolver htmlTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("/templates/html/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding("UTF8");
+        templateResolver.setCheckExistence(true);
+        templateResolver.setCacheable(false);
+        return templateResolver;
+    }
 }
