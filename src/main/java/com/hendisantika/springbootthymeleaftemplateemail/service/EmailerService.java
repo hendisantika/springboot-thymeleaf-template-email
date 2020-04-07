@@ -109,4 +109,38 @@ public class EmailerService {
 
     }
 
+    /**
+     * Send email with html template found in classpath resource
+     *
+     * @param EmailDto
+     * @return EmailDto
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public EmailDto sendHtmlEmail(EmailDto emailDto) throws MessagingException, IOException {
+        // Prepare the evaluation context
+        Context ctx = prepareContext(emailDto);
+
+        // Prepare message using a Spring helper
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        MimeMessageHelper message = prepareMessage(mimeMessage, emailDto);
+
+        // Create the HTML body using Thymeleaf
+        String htmlContent = this.htmlTemplateEngine.process(emailDto.getTemplateName(), ctx);
+        message.setText(htmlContent, true /* isHtml */);
+        emailDto.setEmailedMessage(htmlContent);
+
+        log.info("Processing html email request: " + emailDto.toString());
+
+        message = prepareStaticResources(message, emailDto);
+
+        // Send mail
+        this.mailSender.send(mimeMessage);
+
+        this.htmlTemplateEngine.clearTemplateCache();
+
+        return emailDto;
+
+    }
+
 }
