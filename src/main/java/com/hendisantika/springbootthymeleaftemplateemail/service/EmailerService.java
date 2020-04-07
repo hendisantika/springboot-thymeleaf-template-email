@@ -13,6 +13,8 @@ import org.thymeleaf.context.Context;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -140,6 +142,49 @@ public class EmailerService {
         this.htmlTemplateEngine.clearTemplateCache();
 
         return emailDto;
+
+    }
+
+    /**
+     * Send multiple emails using templates in Emailer/Templates/ directory
+     *
+     * @param emailDtos
+     * @return
+     * @throws MessagingException
+     * @throws IOException
+     */
+    public List<EmailDto> sendEmails(List<EmailDto> emailDtos) throws MessagingException, IOException {
+
+        List<MimeMessage> mimeMessages = new ArrayList<MimeMessage>();
+        MimeMessage mimeMessage = null;
+
+        for (EmailDto emailDto : emailDtos) {
+
+            // Prepare the evaluation context
+            final Context ctx = prepareContext(emailDto);
+
+            // Prepare message using a Spring helper
+            mimeMessage = this.mailSender.createMimeMessage();
+            MimeMessageHelper message = prepareMessage(mimeMessage, emailDto);
+
+            // Create the HTML body using Thymeleaf
+            String htmlContent = this.fileTemplateEngine.process(emailDto.getTemplateName(), ctx);
+            message.setText(htmlContent, true /* isHtml */);
+            emailDto.setEmailedMessage(htmlContent);
+
+            log.info("Processing emails request: " + emailDto.toString());
+
+            message = prepareStaticResources(message, emailDto);
+
+            mimeMessages.add(mimeMessage);
+        }
+
+        // Send mail
+        this.mailSender.send(mimeMessages.toArray(new MimeMessage[0]));
+
+        this.fileTemplateEngine.clearTemplateCache();
+
+        return emailDtos;
 
     }
 
