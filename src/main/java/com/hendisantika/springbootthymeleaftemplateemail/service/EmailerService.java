@@ -4,6 +4,8 @@ import com.hendisantika.springbootthymeleaftemplateemail.dto.EmailDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -216,6 +218,25 @@ public class EmailerService {
         }
 
         return message;
+
+    }
+
+    private List<File> loadResources(String fileNamePattern) throws IOException {
+        PathMatchingResourcePatternResolver fileResolver = new PathMatchingResourcePatternResolver();
+        Resource[] resources = null;
+
+        try {
+            resources = fileResolver.getResources("file:" + fileNamePattern);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<File> attachFiles = new ArrayList<File>();
+
+        for (Resource resource : resources) {
+            attachFiles.add(resource.getFile());
+        }
+
+        return attachFiles;
 
     }
 
