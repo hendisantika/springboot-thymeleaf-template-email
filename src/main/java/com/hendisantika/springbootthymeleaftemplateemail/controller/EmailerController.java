@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,5 +49,15 @@ public class EmailerController {
 
         return email;
     }
+
+    @PostMapping(value = "/sendemails")
+    public Iterable<EmailDto> emailHtmlTemplate(@RequestBody List<EmailDto> emails)
+            throws IOException, MessagingException {
+
+        emailerService.sendEmails(emails);
+
+        return emails;
+    }
+
 
 }
