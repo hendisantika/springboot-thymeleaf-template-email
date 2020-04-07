@@ -33,4 +33,12 @@ public class EmailerController {
         return email;
     }
 
+    @PostMapping(value = "/sendtextemail")
+    public EmailDto emailTextTemplate(@RequestBody EmailDto email) throws IOException, MessagingException {
+
+        emailerService.sendTextTemplateEmail(email);
+
+        return email;
+    }
+
 }
