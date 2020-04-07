@@ -78,5 +78,35 @@ public class EmailerService {
 
     }
 
+    /**
+     * Send email using Text template
+     *
+     * @param EmailDto
+     * @return EmailDto
+     * @throws IOException
+     * @throws MessagingException
+     */
+    public EmailDto sendTextTemplateEmail(EmailDto emailDto)
+            throws IOException, MessagingException {
+
+        // Prepare email context
+        Context ctx = prepareContext(emailDto);
+
+        // Prepare message
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        // Prepare message using a Spring helper
+        MimeMessageHelper message = prepareMessage(mimeMessage, emailDto);
+        // Create email message using TEXT template
+        String textContent = this.textTemplateEngine.process(emailDto.getTemplateName(), ctx); // text/email-text\"
+
+        emailDto.setEmailedMessage(textContent);
+        message.setText(textContent);
+
+        // Send email
+        this.mailSender.send(mimeMessage);
+
+        return emailDto;
+
+    }
 
 }
