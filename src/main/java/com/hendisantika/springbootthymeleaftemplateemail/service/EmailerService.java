@@ -12,6 +12,7 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -187,5 +188,36 @@ public class EmailerService {
         return emailDtos;
 
     }
+
+    private MimeMessageHelper prepareMessage(MimeMessage mimeMessage, EmailDto emailDto)
+            throws MessagingException, IOException {
+
+        // Prepare message using a Spring helper
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                "UTF-8");
+        message.setSubject(emailDto.getSubject());
+        message.setFrom(emailDto.getFrom());
+        message.setTo(emailDto.getTo());
+
+        if (emailDto.getCc() != null && emailDto.getCc().length != 0) {
+            message.setCc(emailDto.getCc());
+        }
+
+        if (emailDto.getBcc() != null && emailDto.getBcc().length != 0) {
+            message.setBcc(emailDto.getBcc());
+        }
+
+        if (emailDto.isHasAttachment()) {
+            List<File> attachments = loadResources(
+                    emailDto.getPathToAttachment() + "/*" + emailDto.getAttachmentName() + "*.*");
+            for (File file : attachments) {
+                message.addAttachment(file.getName(), file);
+            }
+        }
+
+        return message;
+
+    }
+
 
 }
