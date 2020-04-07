@@ -41,4 +41,12 @@ public class EmailerController {
         return email;
     }
 
+    @PostMapping(value = "/sendhtmlemail")
+    public EmailDto emailInHtmlTemplate(@RequestBody EmailDto email) throws IOException, MessagingException {
+
+        emailerService.sendHtmlEmail(email);
+
+        return email;
+    }
+
 }
