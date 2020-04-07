@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -240,5 +241,20 @@ public class EmailerService {
 
     }
 
+    private Context prepareContext(EmailDto emailDto) {
+        // Prepare the evaluation context
+        Context ctx = new Context();
+        Set<String> keySet = emailDto.getParameterMap().keySet();
+        keySet.forEach(s -> {
+            ctx.setVariable(s, emailDto.getParameterMap().get(s));
+        });
+
+        Set<String> resKeySet = emailDto.getStaticResourceMap().keySet();
+        resKeySet.forEach(s -> {
+            ctx.setVariable(s, emailDto.getStaticResourceMap().get(s));
+        });
+
+        return ctx;
+    }
 
 }
