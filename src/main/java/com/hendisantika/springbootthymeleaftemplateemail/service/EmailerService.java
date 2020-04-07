@@ -4,6 +4,7 @@ import com.hendisantika.springbootthymeleaftemplateemail.dto.EmailDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -255,6 +257,22 @@ public class EmailerService {
         });
 
         return ctx;
+    }
+
+    private MimeMessageHelper prepareStaticResources(MimeMessageHelper message,
+                                                     EmailDto emailDto) throws MessagingException {
+        Map<String, Object> staticResources = emailDto.getStaticResourceMap();
+
+        for (Map.Entry<String, Object> entry : staticResources.entrySet()) {
+
+            ClassPathResource imageSource =
+                    new ClassPathResource("static/" + entry.getValue());
+            message.addInline(entry.getKey(), imageSource, "image/png");
+            message.addInline((String) entry.getValue(), imageSource, "image/png");
+
+        }
+
+        return message;
     }
 
 }
