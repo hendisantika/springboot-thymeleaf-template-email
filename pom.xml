@@ -52,7 +52,7 @@
         <dependency>
             <groupId>ognl</groupId>
             <artifactId>ognl</artifactId>
-            <version>3.0.12</version>
+            <version>3.4.3</version>
         </dependency>
 
         <dependency>
